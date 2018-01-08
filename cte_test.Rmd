@@ -1,0 +1,197 @@
+---
+title: "Career and Technical Edcuation"
+author: "Jason Whittle"
+date: "12/14/2017"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This application is designed to present current data on Salt Lake Community College's Career and Technical Edcuation programs. The wage data is obtained from Utah's Deaprtment of Workforce Services (DWS) every semester. Program data comes from Banner.
+
+```{r, echo=FALSE, eval=FALSE}
+# initial data request 01/04/2018
+# All students who received an award that was flagged as a "CTE" award from 201140-201740 who have no transfer history since or continued for credit enrollment. 
+# 
+# PIDM,
+# AWARD_LEVEL,
+# PROGRAM,
+# COLLEGE,
+# AWARD_TERM,
+# DWS_EARNINGS,
+# DWS_YRQTR
+# 
+# Also need to know if the DWS data is updated for these PIDMs. 
+
+# might add additional student demographics to this list later. Might be a problem with the "cte flag" element. I can work with just "all awards". 
+```
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, include=FALSE}
+library(tidyverse); theme_set(theme_minimal())
+
+data <- read_csv("wage_test.csv")
+
+data$wage_year <- substr(data$YEAR_QUARTER, 1,4)
+data$wage_qtr<- substr(data$YEAR_QUARTER, 5, 5)
+data$aw_year <- substr(data$TERM_CODE, 1, 4)
+data$aw_term  <- substr(data$TERM_CODE, 5, 6)
+
+data <- data %>% filter(aw_term == "40" | aw_term == "30" | aw_term == "20")
+
+# 12-24 month wage ifelse. These functions are supposed to take the year and semester a student
+# graduated in and then create 4 wage object for pulling the right DWS data yrqtr out for the student
+data$wage1 <- ifelse(data$aw_term == "40", paste((as.numeric(data$aw_year) + 2), 1, sep = ""), 
+                     ifelse(data$aw_term == "30", paste((as.numeric(data$aw_year) + 1), 4, sep = ""),
+                       paste((as.numeric(data$aw_year) + 1), 3, sep = "")
+                     )
+                     )
+
+data$wage2 <- ifelse(data$aw_term == "40", paste((as.numeric(data$aw_year) + 2), 2, sep = ""), 
+                     ifelse(data$aw_term == "30", paste((as.numeric(data$aw_year) + 2), 1, sep = ""),
+                       paste((as.numeric(data$aw_year) + 1), 4, sep = "")
+                     )
+                     )
+
+data$wage3 <- ifelse(data$aw_term == "40", paste((as.numeric(data$aw_year) + 2), 3, sep = ""), 
+                     ifelse(data$aw_term == "30", paste((as.numeric(data$aw_year) + 2), 2, sep = ""),
+                       paste((as.numeric(data$aw_year) + 2), 1, sep = "")
+                     )
+                     )
+
+data$wage4<- ifelse(data$aw_term == "40", paste((as.numeric(data$aw_year) + 2), 4, sep = ""), 
+                     ifelse(data$aw_term == "30", paste((as.numeric(data$aw_year) + 2), 3, sep = ""),
+                       paste((as.numeric(data$aw_year) + 2), 2, sep = "")
+                     )
+                     )
+
+# going to have to pull the unique pidms
+
+data %>% group_by(PIDM, YEAR_QUARTER) %>% summarise(wage_sum = sum(WAGES)) 
+
+data$wage1 <- as.numeric(data$wage1)
+data$wage2 <- as.numeric(data$wage2)
+data$wgae3 <- as.numeric(data$wage3)
+data$wage4 <- as.numeric(data$wage4)
+
+wage1 <- data %>% 
+  filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>% 
+  group_by(PIDM, MAJOR_CODE_1, DEGREE_CODE, TERM_CODE, aw_year, aw_term, CTE_IND) %>%
+  summarise(earnings = sum(WAGES)) %>% 
+  select(PIDM, MAJOR_CODE_1, DEGREE_CODE, TERM_CODE, aw_year, aw_term, CTE_IND, earnings) 
+
+wage1 %>% filter(CTE_IND == "Y") %>% 
+  group_by(MAJOR_CODE_1, aw_year) %>% 
+  summarise(n = n(), med_earn = median(earnings)) %>%
+  ggplot() + 
+  geom_line(aes(as.numeric(aw_year), y=med_earn, col=n)) + 
+  geom_point(aes(as.numeric(aw_year), y=med_earn, col=n, size = n)) + 
+  facet_wrap(~MAJOR_CODE_1)
+
+```
+
+
+## Program
+
+Select one or more programs to evaluate and compare. The wage distribution plot provides a density plot for wages obtained from DWS. The Award Time Series displays the awards per academic year. The Awards table provides information raw numbers for both of the tables. 
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(shiny)
+library(tidyverse); theme_set(theme_minimal())
+
+# needs to change after SQL query is created
+# test data
+data <- read_csv('survey_pidms.csv') %>% filter(DEGREE_CODE != "APE")
+
+data$aw_sem <- substr(data$TERM_CODE, 5, 6)
+data$aw_year <- substr(data$TERM_CODE, 1, 4)
+
+library(lubridate)
+data$GRADUATION_DATE <- dmy(data$GRADUATION_DATE)
+data <- data %>% filter(GRADUATION_DATE > "2012-01-01" & GRADUATION_DATE < "2016-12-30")
+
+# Define UI for application that draws a histogram
+ui <- fluidPage(
+  titlePanel("SLCC CTE program and workforce outcomes"),
+  
+  sidebarLayout(
+    sidebarPanel(
+  selectInput(inputId = "college_ind", label = "College", multiple = FALSE, choices = data$COLLEGE),
+  uiOutput("program"),
+  uiOutput("award")
+  ),
+  
+  mainPanel(
+    tabsetPanel(
+      tabPanel("Wage Distribution", plotOutput(outputId = "plot")),
+      tabPanel("Awards Time Series", plotOutput(outputId = "plot_ts")),
+      tabPanel("Wage Time Series", plotOutput(outputId = "wage_ts")),
+      tabPanel("Awards table", tableOutput(outputId = "table"))
+            ))
+)) 
+
+# Define server logic required to draw a histogram
+server <- function(input, output) {
+  df0 <- eventReactive(input$college_ind, {
+    data %>% dplyr::filter(COLLEGE %in% input$college_ind)
+  })
+
+  output$program <- renderUI({
+    selectInput(inputId = "program", label = "Program", multiple = TRUE, choices = df0()$MAJOR_CODE_1)
+  })
+  
+  df1 <- eventReactive(input$program, {
+    df0() %>% dplyr::filter(MAJOR_CODE_1 %in% input$program)
+  })
+  
+  output$award <- renderUI({
+    selectInput(inputId = "award", label = "Award level", choices = df1()$DEGREE_CODE)
+  })
+
+  df2 <- eventReactive(input$award, {
+    df1() %>% dplyr::filter(DEGREE_CODE %in% input$award)
+  })
+  
+  output$plot <- renderPlot(df2() %>% 
+                              ggplot() + 
+                              geom_density(aes(CUM_INSTITUTION_GPA, color = MAJOR_CODE_1)) + 
+                              geom_vline(xintercept = median(as.numeric(df2()$CUM_INSTITUTION_GPA))) +
+                              geom_vline(xintercept = quantile(as.numeric(df2()$CUM_INSTITUTION_GPA), 0.25), linetype=3) + 
+                              geom_vline(xintercept = quantile(as.numeric(df2()$CUM_INSTITUTION_GPA), 0.75), linetype=3) + 
+                              ggtitle("Cummulative institutional GPA") + 
+                              xlab("Cummulative GPA") + 
+                              ylab("Density") + 
+                              scale_color_discrete(name="Program")
+                            )
+  
+  output$plot_ts <- renderPlot(df2() %>%
+                                 group_by(TERM_CODE, MAJOR_CODE_1) %>% 
+                                 tally() %>%
+                                 ggplot() + 
+                                 geom_line(aes(x=TERM_CODE, y=n, color = MAJOR_CODE_1)) +
+                                 ggtitle("Number of Awards by program") +
+                                 xlab("Year (calendar)") + 
+                                 ylab("Number of Awards") + 
+                                 scale_color_discrete(name="Program")
+                               )
+  
+  output$wage_ts <- renderPlot()
+  
+
+  output$table <- renderTable({df2() %>% 
+      group_by(MAJOR_CODE_1) %>% 
+      summarise('Median GPA' = median(CUM_INSTITUTION_GPA),
+              '25%' = quantile(as.numeric(CUM_INSTITUTION_GPA), 0.25),
+              '75%' = quantile(as.numeric(CUM_INSTITUTION_GPA), 0.75),
+              students = n_distinct(PIDM),
+              awards = n()
+              )
+    })
+}
+# Run the application 
+shinyApp(ui = ui, server = server)
+```
+
