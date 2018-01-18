@@ -551,6 +551,8 @@ server <- function(input, output) {
   output$plot <- renderPlot({
     df2() %>% filter(TERM_CODE > 200940) %>%
       filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>% 
+      group_by(PIDM) %>%
+      filter(max(YEAR_QUARTER) >= wage4) %>%
       group_by(PIDM, PROGRAM_NAME, DEGREE_CODE, TERM_CODE, aw_year, aw_term) %>%
       summarise(earnings = sum(WAGES)) %>% 
       select(PIDM, PROGRAM_NAME, DEGREE_CODE, TERM_CODE, aw_year, aw_term, earnings) %>%
@@ -604,6 +606,8 @@ server <- function(input, output) {
     output$table <- renderTable({
       df2() %>% filter(TERM_CODE > 201020) %>%
         filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>% 
+        group_by(PIDM) %>%
+        filter(max(YEAR_QUARTER) >= wage4) %>%
         group_by(PIDM, PROGRAM_NAME, DEGREE_CODE, TERM_CODE, aw_year, aw_term) %>%
         summarise(earnings = sum(WAGES)) %>% 
         select(PIDM, PROGRAM_NAME, DEGREE_CODE, TERM_CODE, aw_year, aw_term, earnings) %>%
@@ -612,7 +616,8 @@ server <- function(input, output) {
               '25%' = quantile(earnings, 0.25),
               '75%' = quantile(earnings, 0.75),
               students = n_distinct(PIDM)
-              )
+              ) %>%
+        rename("Program name" = PROGRAM_NAME, "Award year" = aw_year)
       })
 }
 # Run the application 
