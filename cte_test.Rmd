@@ -576,6 +576,7 @@ server <- function(input, output) {
       tally() %>%
       ggplot() + 
       geom_line(aes(x=as.numeric(aw_year), y=n, color = PROGRAM_NAME)) +
+      geom_point(aes(x=as.numeric(aw_year), y=n, color = PROGRAM_NAME)) +
       ggtitle("Number of Awards by program") +
       xlab("Year (calendar)") + 
       ylab("Number of Awards") + 
