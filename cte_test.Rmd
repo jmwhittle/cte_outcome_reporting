@@ -61,7 +61,6 @@ AND d.cte_ind = 'Y';       --had gotten a CTE award
 library(shiny)
 library(tidyverse); theme_set(theme_minimal())
 data <- read_csv("cte_test.csv")
-# data <- read_csv("wage_test.csv")
 
 data$wage_year <- substr(data$YEAR_QUARTER, 1,4)
 data$wage_qtr<- substr(data$YEAR_QUARTER, 5, 5)
@@ -215,288 +214,288 @@ data$wage4<- as.numeric(
 # bench_11_15 <- data_frame(year, hs_med, smc_med)
 
 # year 2010
-prog10_denom <- data %>% filter(TERM_CODE > 201020 & TERM_CODE < 201560) %>%
-  filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
-  group_by(PIDM, PROGRAM_NAME, aw_year) %>%
-  summarise(earnings = sum(WAGES)) %>% 
-  filter(aw_year == "2010") %>% 
-  group_by(PROGRAM_NAME) %>% 
-  summarise(deno = n()) 
-  
-prog10_num <- data %>% filter(TERM_CODE > 201020 & TERM_CODE < 201560) %>%
-  filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
-  group_by(PIDM, PROGRAM_NAME, aw_year) %>%
-  summarise(earnings = sum(WAGES)) %>% 
-  filter(aw_year == "2010" & earnings > 28597) %>% 
-  group_by(PROGRAM_NAME) %>% 
-  summarise(num = n())
-
-prog10_num_smc <- data %>% filter(TERM_CODE > 201020 & TERM_CODE < 201560) %>%
-  filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
-  group_by(PIDM, PROGRAM_NAME, aw_year) %>%
-  summarise(earnings = sum(WAGES)) %>% 
-  filter(aw_year == "2010" & earnings > 32598) %>% 
-  group_by(PROGRAM_NAME) %>% 
-  summarise(num_smc = n())
-
-prog10 <- prog10_denom %>% left_join(prog10_num, by = "PROGRAM_NAME")
-prog10 <- prog10 %>% left_join(prog10_num_smc, by = "PROGRAM_NAME")
-prog10$num[is.na(prog10$num) == T] <- 0
-prog10$num_smc[is.na(prog10$num_smc) == T] <- 0
-prog10$ratio <- (round(prog10$num/prog10$deno, 4))*100
-prog10$ratio_smc <- (round(prog10$num_smc/prog10$deno, 4))*100
-rm(prog10_num, prog10_denom, prog10_num_smc)
-
-prog10 <- data_frame(prog10$PROGRAM_NAME, 2010, prog10$ratio, prog10$ratio_smc)
-names(prog10) <- c("PROGRAM_NAME", "Year", "High School", "Some College/AS")
-
-# year 2011
-prog11_denom <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201560) %>%
-  filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
-  group_by(PIDM, PROGRAM_NAME, aw_year) %>%
-  summarise(earnings = sum(WAGES)) %>% 
-  filter(aw_year == "2011") %>% 
-  group_by(PROGRAM_NAME) %>% 
-  summarise(deno = n()) 
-  
-prog11_num <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201560) %>%
-  filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
-  group_by(PIDM, PROGRAM_NAME, aw_year) %>%
-  summarise(earnings = sum(WAGES)) %>% 
-  filter(aw_year == "2011" & earnings > 28518) %>% 
-  group_by(PROGRAM_NAME) %>% 
-  summarise(num = n())
-
-prog11_num_smc <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201560) %>%
-  filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
-  group_by(PIDM, PROGRAM_NAME, aw_year) %>%
-  summarise(earnings = sum(WAGES)) %>% 
-  filter(aw_year == "2011" & earnings > 32747) %>% 
-  group_by(PROGRAM_NAME) %>% 
-  summarise(num_smc = n())
-
-prog11 <- prog11_denom %>% left_join(prog11_num, by = "PROGRAM_NAME")
-prog11 <- prog11 %>% left_join(prog11_num_smc, by = "PROGRAM_NAME")
-prog11$num[is.na(prog11$num) == T] <- 0
-prog11$num_smc[is.na(prog11$num_smc) == T] <- 0
-prog11$ratio <- (round(prog11$num/prog11$deno, 4))*100
-prog11$ratio_smc <- (round(prog11$num_smc/prog11$deno, 4))*100
-rm(prog11_num, prog11_denom, prog11_num_smc)
-
-prog11 <- data_frame(prog11$PROGRAM_NAME, 2011, prog11$ratio, prog11$ratio_smc)
-names(prog11) <- c("PROGRAM_NAME", "Year", "High School", "Some College/AS")
-
-# year 2012
-prog12_denom <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201560) %>%
-  filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
-  group_by(PIDM, PROGRAM_NAME, aw_year) %>%
-  summarise(earnings = sum(WAGES)) %>% 
-  filter(aw_year == "2012") %>% 
-  group_by(PROGRAM_NAME) %>% 
-  summarise(deno = n()) 
-  
-prog12_num <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201560) %>%
-  filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
-  group_by(PIDM, PROGRAM_NAME, aw_year) %>%
-  summarise(earnings = sum(WAGES)) %>% 
-  filter(aw_year == "2012" & earnings > 28105) %>% 
-  group_by(PROGRAM_NAME) %>% 
-  summarise(num = n())
-
-prog12_num_smc <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201560) %>%
-  filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
-  group_by(PIDM, PROGRAM_NAME, aw_year) %>%
-  summarise(earnings = sum(WAGES)) %>% 
-  filter(aw_year == "2012" & earnings >32578) %>% 
-  group_by(PROGRAM_NAME) %>% 
-  summarise(num_smc = n())
-
-prog12 <- prog12_denom %>% left_join(prog12_num, by = "PROGRAM_NAME")
-prog12 <- prog12 %>% left_join(prog12_num_smc, by = "PROGRAM_NAME")
-prog12$num[is.na(prog12$num) == T] <- 0
-prog12$num_smc[is.na(prog12$num_smc) == T] <- 0
-prog12$ratio <- (round(prog12$num/prog12$deno, 4))*100
-prog12$ratio_smc <- (round(prog12$num_smc/prog12$deno, 4))*100
-rm(prog12_num, prog12_denom, prog12_num_smc)
-
-prog12 <- data_frame(prog12$PROGRAM_NAME, 2012, prog12$ratio, prog12$ratio_smc)
-names(prog12) <- c("PROGRAM_NAME", "Year", "High School", "Some College/AS")
-
-# year 2013
-prog13_denom <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201560) %>%
-  filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
-  group_by(PIDM, PROGRAM_NAME, aw_year) %>%
-  summarise(earnings = sum(WAGES)) %>% 
-  filter(aw_year == "2013") %>% 
-  group_by(PROGRAM_NAME) %>% 
-  summarise(deno = n()) 
-  
-prog13_num <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201560) %>%
-  filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
-  group_by(PIDM, PROGRAM_NAME, aw_year) %>%
-  summarise(earnings = sum(WAGES)) %>% 
-  filter(aw_year == "2013" & earnings > 28939) %>% 
-  group_by(PROGRAM_NAME) %>% 
-  summarise(num = n())
-
-prog13_num_smc <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201560) %>%
-  filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
-  group_by(PIDM, PROGRAM_NAME, aw_year) %>%
-  summarise(earnings = sum(WAGES)) %>% 
-  filter(aw_year == "2013" & earnings > 33098) %>% 
-  group_by(PROGRAM_NAME) %>% 
-  summarise(num_smc = n())
-
-prog13 <- prog13_denom %>% left_join(prog13_num, by = "PROGRAM_NAME")
-prog13 <- prog13 %>% left_join(prog13_num_smc, by = "PROGRAM_NAME")
-prog13$num[is.na(prog13$num) == T] <- 0
-prog13$num_smc[is.na(prog13$num_smc) == T] <- 0
-prog13$ratio <- (round(prog13$num/prog13$deno, 4))*100
-prog13$ratio_smc <- (round(prog13$num_smc/prog13$deno, 4))*100
-rm(prog13_num, prog13_denom, prog13_num_smc)
-
-prog13 <- data_frame(prog13$PROGRAM_NAME, 2013, prog13$ratio, prog13$ratio_smc)
-names(prog13) <- c("PROGRAM_NAME", "Year", "High School", "Some College/AS")
-
-# year 2014
-prog14_denom <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201560) %>%
-  filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
-  group_by(PIDM, PROGRAM_NAME, aw_year) %>%
-  summarise(earnings = sum(WAGES)) %>% 
-  filter(aw_year == "2014") %>% 
-  group_by(PROGRAM_NAME) %>% 
-  summarise(deno = n()) 
-  
-prog14_num <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201560) %>%
-  filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
-  group_by(PIDM, PROGRAM_NAME, aw_year) %>%
-  summarise(earnings = sum(WAGES)) %>% 
-  filter(aw_year == "2014" & earnings > 29279) %>% 
-  group_by(PROGRAM_NAME) %>% 
-  summarise(num = n())
-
-prog14_num_smc <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201560) %>%
-  filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
-  group_by(PIDM, PROGRAM_NAME, aw_year) %>%
-  summarise(earnings = sum(WAGES)) %>% 
-  filter(aw_year == "2014" & earnings > 33265) %>% 
-  group_by(PROGRAM_NAME) %>% 
-  summarise(num_smc = n())
-
-prog14 <- prog14_denom %>% left_join(prog14_num, by = "PROGRAM_NAME")
-prog14 <- prog14 %>% left_join(prog14_num_smc, by = "PROGRAM_NAME")
-prog14$num[is.na(prog14$num) == T] <- 0
-prog14$num_smc[is.na(prog14$num_smc) == T] <- 0
-prog14$ratio <- (round(prog14$num/prog14$deno, 4))*100
-prog14$ratio_smc <- (round(prog14$num_smc/prog14$deno, 4))*100
-rm(prog14_num, prog14_denom, prog14_num_smc)
-
-prog14 <- data_frame(prog14$PROGRAM_NAME, 2014, prog14$ratio, prog14$ratio_smc)
-names(prog14) <- c("PROGRAM_NAME", "Year", "High School", "Some College/AS")
-
-# year 2015
-prog15_denom <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201530) %>%
-  filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
-  group_by(PIDM, PROGRAM_NAME, aw_year) %>%
-  summarise(earnings = sum(WAGES)) %>% 
-  filter(aw_year == "2015") %>% 
-  group_by(PROGRAM_NAME) %>% 
-  summarise(deno = n()) 
-  
-prog15_num <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201530) %>%
-  filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
-  group_by(PIDM, PROGRAM_NAME, aw_year) %>%
-  summarise(earnings = sum(WAGES)) %>% 
-  filter(aw_year == "2015" & earnings > 30120) %>% 
-  group_by(PROGRAM_NAME) %>% 
-  summarise(num = n())
-
-prog15_num_smc <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201530) %>%
-  filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
-  group_by(PIDM, PROGRAM_NAME, aw_year) %>%
-  summarise(earnings = sum(WAGES)) %>% 
-  filter(aw_year == "2015" & earnings > 34908) %>% 
-  group_by(PROGRAM_NAME) %>% 
-  summarise(num_smc = n())
-
-prog15 <- prog15_denom %>% left_join(prog15_num, by = "PROGRAM_NAME")
-prog15 <- prog15 %>% left_join(prog15_num_smc, by = "PROGRAM_NAME")
-prog15$num[is.na(prog15$num) == T] <- 0
-prog15$num_smc[is.na(prog15$num_smc) == T] <- 0
-prog15$ratio <- (round(prog15$num/prog15$deno, 4))*100
-prog15$ratio_smc <- (round(prog15$num_smc/prog15$deno, 4))*100
-rm(prog15_num, prog15_denom, prog15_num_smc)
-
-prog15 <- data_frame(prog15$PROGRAM_NAME, 2015, prog15$ratio, prog15$ratio_smc)
-names(prog15) <- c("PROGRAM_NAME", "Year", "High School", "Some College/AS")
-
-# combining them together
-progs <- rbind(prog10, prog11, prog12, prog13, prog14, prog15) %>%
-  gather(benchmark, n, 3:4)
-
-# program with more than 50 graduates in 6 years
-over_50 <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201530) %>%
-  filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
-  group_by(PIDM, PROGRAM_NAME, aw_year) %>%
-  summarise(earnings = sum(WAGES)) %>%
-  group_by(PROGRAM_NAME) %>% 
-  tally() %>%
-  filter(n > 49) 
-
-progs %>% filter(PROGRAM_NAME %in% over_50$PROGRAM_NAME) %>% 
-  filter(PROGRAM_NAME != "Visual Art (GraphicDesign)" & PROGRAM_NAME != "Visual Art (Photography)") %>% 
-  ggplot() + 
-  geom_line(aes(x = Year, y = n, col = benchmark)) + 
-  ylim(0, 100) + 
-  labs(title = " Percent of graduates with 12-24 month wages above median benchmark wages", 
-       y = "Percent", 
-       x= "Award Year") + 
-  scale_color_manual(values = c("#00abe1", "#ffcd00")) + 
-  facet_wrap(~PROGRAM_NAME)
-  
-
-
-#########################################################################################
-# function
-
-by_prog <- function(yearsem1, yearsem2, hswage, smcwage, awyear){
-  
-  denom <- data %>% filter(TERM_CODE > yearsem1 & TERM_CODE < yearsem2) %>%
-    filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
-    group_by(PIDM, PROGRAM_NAME, aw_year) %>%
-    summarise(earnings = sum(WAGES)) %>% 
-    filter(aw_year == as.character(awyear)) %>% 
-    group_by(PROGRAM_NAME) %>% 
-    summarise(deno = n()) 
-  
-  numer_hs <- data %>% filter(TERM_CODE > yearsem1 & TERM_CODE < yearsem2) %>%
-    filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
-    group_by(PIDM, PROGRAM_NAME, aw_year) %>%
-    summarise(earnings = sum(WAGES)) %>% 
-    filter(aw_year == as.character(awyear) & earnings > hswage) %>% 
-    group_by(PROGRAM_NAME) %>% 
-    summarise(num = n())
-
-  numer_smc <- data %>% filter(TERM_CODE > yearsem1 & TERM_CODE < yearsem2) %>%
-    filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
-    group_by(PIDM, PROGRAM_NAME, aw_year) %>%
-    summarise(earnings = sum(WAGES)) %>% 
-    filter(aw_year == as.character(awyear) & earnings > smcwage) %>% 
-    group_by(PROGRAM_NAME) %>% 
-    summarise(num_smc = n())
-
-prog14 <- prog14_denom %>% left_join(prog14_num, by = "PROGRAM_NAME")
-prog14 <- prog14 %>% left_join(prog14_num_smc, by = "PROGRAM_NAME")
-prog14$num[is.na(prog14$num) == T] <- 0
-prog14$num_smc[is.na(prog14$num_smc) == T] <- 0
-prog14$ratio <- (round(prog14$num/prog14$deno, 4))*100
-prog14$ratio_smc <- (round(prog14$num_smc/prog14$deno, 4))*100
-rm(prog14_num, prog14_denom, prog14_num_smc)
-
-prog14 <- data_frame(prog14$PROGRAM_NAME, 2014, prog14$ratio, prog14$ratio_smc)
-names(prog14) <- c("PROGRAM_NAME", "Year", "High School", "Some College/AS")
-  
-}
+# prog10_denom <- data %>% filter(TERM_CODE > 201020 & TERM_CODE < 201560) %>%
+#   filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
+#   group_by(PIDM, PROGRAM_NAME, aw_year) %>%
+#   summarise(earnings = sum(WAGES)) %>% 
+#   filter(aw_year == "2010") %>% 
+#   group_by(PROGRAM_NAME) %>% 
+#   summarise(deno = n()) 
+#   
+# prog10_num <- data %>% filter(TERM_CODE > 201020 & TERM_CODE < 201560) %>%
+#   filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
+#   group_by(PIDM, PROGRAM_NAME, aw_year) %>%
+#   summarise(earnings = sum(WAGES)) %>% 
+#   filter(aw_year == "2010" & earnings > 28597) %>% 
+#   group_by(PROGRAM_NAME) %>% 
+#   summarise(num = n())
+# 
+# prog10_num_smc <- data %>% filter(TERM_CODE > 201020 & TERM_CODE < 201560) %>%
+#   filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
+#   group_by(PIDM, PROGRAM_NAME, aw_year) %>%
+#   summarise(earnings = sum(WAGES)) %>% 
+#   filter(aw_year == "2010" & earnings > 32598) %>% 
+#   group_by(PROGRAM_NAME) %>% 
+#   summarise(num_smc = n())
+# 
+# prog10 <- prog10_denom %>% left_join(prog10_num, by = "PROGRAM_NAME")
+# prog10 <- prog10 %>% left_join(prog10_num_smc, by = "PROGRAM_NAME")
+# prog10$num[is.na(prog10$num) == T] <- 0
+# prog10$num_smc[is.na(prog10$num_smc) == T] <- 0
+# prog10$ratio <- (round(prog10$num/prog10$deno, 4))*100
+# prog10$ratio_smc <- (round(prog10$num_smc/prog10$deno, 4))*100
+# rm(prog10_num, prog10_denom, prog10_num_smc)
+# 
+# prog10 <- data_frame(prog10$PROGRAM_NAME, 2010, prog10$ratio, prog10$ratio_smc)
+# names(prog10) <- c("PROGRAM_NAME", "Year", "High School", "Some College/AS")
+# 
+# # year 2011
+# prog11_denom <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201560) %>%
+#   filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
+#   group_by(PIDM, PROGRAM_NAME, aw_year) %>%
+#   summarise(earnings = sum(WAGES)) %>% 
+#   filter(aw_year == "2011") %>% 
+#   group_by(PROGRAM_NAME) %>% 
+#   summarise(deno = n()) 
+#   
+# prog11_num <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201560) %>%
+#   filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
+#   group_by(PIDM, PROGRAM_NAME, aw_year) %>%
+#   summarise(earnings = sum(WAGES)) %>% 
+#   filter(aw_year == "2011" & earnings > 28518) %>% 
+#   group_by(PROGRAM_NAME) %>% 
+#   summarise(num = n())
+# 
+# prog11_num_smc <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201560) %>%
+#   filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
+#   group_by(PIDM, PROGRAM_NAME, aw_year) %>%
+#   summarise(earnings = sum(WAGES)) %>% 
+#   filter(aw_year == "2011" & earnings > 32747) %>% 
+#   group_by(PROGRAM_NAME) %>% 
+#   summarise(num_smc = n())
+# 
+# prog11 <- prog11_denom %>% left_join(prog11_num, by = "PROGRAM_NAME")
+# prog11 <- prog11 %>% left_join(prog11_num_smc, by = "PROGRAM_NAME")
+# prog11$num[is.na(prog11$num) == T] <- 0
+# prog11$num_smc[is.na(prog11$num_smc) == T] <- 0
+# prog11$ratio <- (round(prog11$num/prog11$deno, 4))*100
+# prog11$ratio_smc <- (round(prog11$num_smc/prog11$deno, 4))*100
+# rm(prog11_num, prog11_denom, prog11_num_smc)
+# 
+# prog11 <- data_frame(prog11$PROGRAM_NAME, 2011, prog11$ratio, prog11$ratio_smc)
+# names(prog11) <- c("PROGRAM_NAME", "Year", "High School", "Some College/AS")
+# 
+# # year 2012
+# prog12_denom <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201560) %>%
+#   filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
+#   group_by(PIDM, PROGRAM_NAME, aw_year) %>%
+#   summarise(earnings = sum(WAGES)) %>% 
+#   filter(aw_year == "2012") %>% 
+#   group_by(PROGRAM_NAME) %>% 
+#   summarise(deno = n()) 
+#   
+# prog12_num <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201560) %>%
+#   filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
+#   group_by(PIDM, PROGRAM_NAME, aw_year) %>%
+#   summarise(earnings = sum(WAGES)) %>% 
+#   filter(aw_year == "2012" & earnings > 28105) %>% 
+#   group_by(PROGRAM_NAME) %>% 
+#   summarise(num = n())
+# 
+# prog12_num_smc <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201560) %>%
+#   filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
+#   group_by(PIDM, PROGRAM_NAME, aw_year) %>%
+#   summarise(earnings = sum(WAGES)) %>% 
+#   filter(aw_year == "2012" & earnings >32578) %>% 
+#   group_by(PROGRAM_NAME) %>% 
+#   summarise(num_smc = n())
+# 
+# prog12 <- prog12_denom %>% left_join(prog12_num, by = "PROGRAM_NAME")
+# prog12 <- prog12 %>% left_join(prog12_num_smc, by = "PROGRAM_NAME")
+# prog12$num[is.na(prog12$num) == T] <- 0
+# prog12$num_smc[is.na(prog12$num_smc) == T] <- 0
+# prog12$ratio <- (round(prog12$num/prog12$deno, 4))*100
+# prog12$ratio_smc <- (round(prog12$num_smc/prog12$deno, 4))*100
+# rm(prog12_num, prog12_denom, prog12_num_smc)
+# 
+# prog12 <- data_frame(prog12$PROGRAM_NAME, 2012, prog12$ratio, prog12$ratio_smc)
+# names(prog12) <- c("PROGRAM_NAME", "Year", "High School", "Some College/AS")
+# 
+# # year 2013
+# prog13_denom <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201560) %>%
+#   filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
+#   group_by(PIDM, PROGRAM_NAME, aw_year) %>%
+#   summarise(earnings = sum(WAGES)) %>% 
+#   filter(aw_year == "2013") %>% 
+#   group_by(PROGRAM_NAME) %>% 
+#   summarise(deno = n()) 
+#   
+# prog13_num <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201560) %>%
+#   filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
+#   group_by(PIDM, PROGRAM_NAME, aw_year) %>%
+#   summarise(earnings = sum(WAGES)) %>% 
+#   filter(aw_year == "2013" & earnings > 28939) %>% 
+#   group_by(PROGRAM_NAME) %>% 
+#   summarise(num = n())
+# 
+# prog13_num_smc <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201560) %>%
+#   filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
+#   group_by(PIDM, PROGRAM_NAME, aw_year) %>%
+#   summarise(earnings = sum(WAGES)) %>% 
+#   filter(aw_year == "2013" & earnings > 33098) %>% 
+#   group_by(PROGRAM_NAME) %>% 
+#   summarise(num_smc = n())
+# 
+# prog13 <- prog13_denom %>% left_join(prog13_num, by = "PROGRAM_NAME")
+# prog13 <- prog13 %>% left_join(prog13_num_smc, by = "PROGRAM_NAME")
+# prog13$num[is.na(prog13$num) == T] <- 0
+# prog13$num_smc[is.na(prog13$num_smc) == T] <- 0
+# prog13$ratio <- (round(prog13$num/prog13$deno, 4))*100
+# prog13$ratio_smc <- (round(prog13$num_smc/prog13$deno, 4))*100
+# rm(prog13_num, prog13_denom, prog13_num_smc)
+# 
+# prog13 <- data_frame(prog13$PROGRAM_NAME, 2013, prog13$ratio, prog13$ratio_smc)
+# names(prog13) <- c("PROGRAM_NAME", "Year", "High School", "Some College/AS")
+# 
+# # year 2014
+# prog14_denom <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201560) %>%
+#   filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
+#   group_by(PIDM, PROGRAM_NAME, aw_year) %>%
+#   summarise(earnings = sum(WAGES)) %>% 
+#   filter(aw_year == "2014") %>% 
+#   group_by(PROGRAM_NAME) %>% 
+#   summarise(deno = n()) 
+#   
+# prog14_num <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201560) %>%
+#   filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
+#   group_by(PIDM, PROGRAM_NAME, aw_year) %>%
+#   summarise(earnings = sum(WAGES)) %>% 
+#   filter(aw_year == "2014" & earnings > 29279) %>% 
+#   group_by(PROGRAM_NAME) %>% 
+#   summarise(num = n())
+# 
+# prog14_num_smc <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201560) %>%
+#   filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
+#   group_by(PIDM, PROGRAM_NAME, aw_year) %>%
+#   summarise(earnings = sum(WAGES)) %>% 
+#   filter(aw_year == "2014" & earnings > 33265) %>% 
+#   group_by(PROGRAM_NAME) %>% 
+#   summarise(num_smc = n())
+# 
+# prog14 <- prog14_denom %>% left_join(prog14_num, by = "PROGRAM_NAME")
+# prog14 <- prog14 %>% left_join(prog14_num_smc, by = "PROGRAM_NAME")
+# prog14$num[is.na(prog14$num) == T] <- 0
+# prog14$num_smc[is.na(prog14$num_smc) == T] <- 0
+# prog14$ratio <- (round(prog14$num/prog14$deno, 4))*100
+# prog14$ratio_smc <- (round(prog14$num_smc/prog14$deno, 4))*100
+# rm(prog14_num, prog14_denom, prog14_num_smc)
+# 
+# prog14 <- data_frame(prog14$PROGRAM_NAME, 2014, prog14$ratio, prog14$ratio_smc)
+# names(prog14) <- c("PROGRAM_NAME", "Year", "High School", "Some College/AS")
+# 
+# # year 2015
+# prog15_denom <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201530) %>%
+#   filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
+#   group_by(PIDM, PROGRAM_NAME, aw_year) %>%
+#   summarise(earnings = sum(WAGES)) %>% 
+#   filter(aw_year == "2015") %>% 
+#   group_by(PROGRAM_NAME) %>% 
+#   summarise(deno = n()) 
+#   
+# prog15_num <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201530) %>%
+#   filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
+#   group_by(PIDM, PROGRAM_NAME, aw_year) %>%
+#   summarise(earnings = sum(WAGES)) %>% 
+#   filter(aw_year == "2015" & earnings > 30120) %>% 
+#   group_by(PROGRAM_NAME) %>% 
+#   summarise(num = n())
+# 
+# prog15_num_smc <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201530) %>%
+#   filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
+#   group_by(PIDM, PROGRAM_NAME, aw_year) %>%
+#   summarise(earnings = sum(WAGES)) %>% 
+#   filter(aw_year == "2015" & earnings > 34908) %>% 
+#   group_by(PROGRAM_NAME) %>% 
+#   summarise(num_smc = n())
+# 
+# prog15 <- prog15_denom %>% left_join(prog15_num, by = "PROGRAM_NAME")
+# prog15 <- prog15 %>% left_join(prog15_num_smc, by = "PROGRAM_NAME")
+# prog15$num[is.na(prog15$num) == T] <- 0
+# prog15$num_smc[is.na(prog15$num_smc) == T] <- 0
+# prog15$ratio <- (round(prog15$num/prog15$deno, 4))*100
+# prog15$ratio_smc <- (round(prog15$num_smc/prog15$deno, 4))*100
+# rm(prog15_num, prog15_denom, prog15_num_smc)
+# 
+# prog15 <- data_frame(prog15$PROGRAM_NAME, 2015, prog15$ratio, prog15$ratio_smc)
+# names(prog15) <- c("PROGRAM_NAME", "Year", "High School", "Some College/AS")
+# 
+# # combining them together
+# progs <- rbind(prog10, prog11, prog12, prog13, prog14, prog15) %>%
+#   gather(benchmark, n, 3:4)
+# 
+# # program with more than 50 graduates in 6 years
+# over_50 <- data %>% filter(TERM_CODE > 200940 & TERM_CODE < 201530) %>%
+#   filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
+#   group_by(PIDM, PROGRAM_NAME, aw_year) %>%
+#   summarise(earnings = sum(WAGES)) %>%
+#   group_by(PROGRAM_NAME) %>% 
+#   tally() %>%
+#   filter(n > 49) 
+# 
+# progs %>% filter(PROGRAM_NAME %in% over_50$PROGRAM_NAME) %>% 
+#   filter(PROGRAM_NAME != "Visual Art (GraphicDesign)" & PROGRAM_NAME != "Visual Art (Photography)") %>% 
+#   ggplot() + 
+#   geom_line(aes(x = Year, y = n, col = benchmark)) + 
+#   ylim(0, 100) + 
+#   labs(title = " Percent of graduates with 12-24 month wages above median benchmark wages", 
+#        y = "Percent", 
+#        x= "Award Year") + 
+#   scale_color_manual(values = c("#00abe1", "#ffcd00")) + 
+#   facet_wrap(~PROGRAM_NAME)
+#   
+# 
+# 
+# #########################################################################################
+# # function
+# 
+# by_prog <- function(yearsem1, yearsem2, hswage, smcwage, awyear){
+#   
+#   denom <- data %>% filter(TERM_CODE > yearsem1 & TERM_CODE < yearsem2) %>%
+#     filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
+#     group_by(PIDM, PROGRAM_NAME, aw_year) %>%
+#     summarise(earnings = sum(WAGES)) %>% 
+#     filter(aw_year == as.character(awyear)) %>% 
+#     group_by(PROGRAM_NAME) %>% 
+#     summarise(deno = n()) 
+#   
+#   numer_hs <- data %>% filter(TERM_CODE > yearsem1 & TERM_CODE < yearsem2) %>%
+#     filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
+#     group_by(PIDM, PROGRAM_NAME, aw_year) %>%
+#     summarise(earnings = sum(WAGES)) %>% 
+#     filter(aw_year == as.character(awyear) & earnings > hswage) %>% 
+#     group_by(PROGRAM_NAME) %>% 
+#     summarise(num = n())
+# 
+#   numer_smc <- data %>% filter(TERM_CODE > yearsem1 & TERM_CODE < yearsem2) %>%
+#     filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>%
+#     group_by(PIDM, PROGRAM_NAME, aw_year) %>%
+#     summarise(earnings = sum(WAGES)) %>% 
+#     filter(aw_year == as.character(awyear) & earnings > smcwage) %>% 
+#     group_by(PROGRAM_NAME) %>% 
+#     summarise(num_smc = n())
+# 
+# prog14 <- prog14_denom %>% left_join(prog14_num, by = "PROGRAM_NAME")
+# prog14 <- prog14 %>% left_join(prog14_num_smc, by = "PROGRAM_NAME")
+# prog14$num[is.na(prog14$num) == T] <- 0
+# prog14$num_smc[is.na(prog14$num_smc) == T] <- 0
+# prog14$ratio <- (round(prog14$num/prog14$deno, 4))*100
+# prog14$ratio_smc <- (round(prog14$num_smc/prog14$deno, 4))*100
+# rm(prog14_num, prog14_denom, prog14_num_smc)
+# 
+# prog14 <- data_frame(prog14$PROGRAM_NAME, 2014, prog14$ratio, prog14$ratio_smc)
+# names(prog14) <- c("PROGRAM_NAME", "Year", "High School", "Some College/AS")
+#   
+# }
 ```
 
 
@@ -507,11 +506,7 @@ Select one or more programs to evaluate and compare. The wage distribution plot 
 there is a delay with this data
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
-# library(lubridate)
-# data$GRADUATION_DATE <- dmy(data$GRADUATION_DATE)
-# data <- data %>% filter(GRADUATION_DATE > "2012-01-01" & GRADUATION_DATE < "2016-12-30")
-
-# Define UI for application that draws a histogram
+# Define UI for application
 ui <- fluidPage(
   titlePanel("SLCC CTE workforce outcomes"),
   
@@ -589,6 +584,8 @@ server <- function(input, output) {
   output$wage_ts <- renderPlot({
     df2() %>% filter(TERM_CODE > 201020) %>%
       filter(YEAR_QUARTER == wage1 | YEAR_QUARTER == wage2 | YEAR_QUARTER == wage3 | YEAR_QUARTER == wage4) %>% 
+      group_by(PIDM) %>%
+      filter(max(YEAR_QUARTER) >= wage4) %>%
       group_by(PIDM, PROGRAM_NAME, DEGREE_CODE, TERM_CODE, aw_year, aw_term) %>%
       summarise(earnings = sum(WAGES)) %>% 
       select(PIDM, PROGRAM_NAME, DEGREE_CODE, TERM_CODE, aw_year, aw_term, earnings) %>%
@@ -614,8 +611,7 @@ server <- function(input, output) {
         summarise('Median earnings' = median(earnings),
               '25%' = quantile(earnings, 0.25),
               '75%' = quantile(earnings, 0.75),
-              students = n_distinct(PIDM),
-              awards = n()
+              students = n_distinct(PIDM)
               )
       })
 }
