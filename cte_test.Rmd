@@ -6,6 +6,8 @@ output: html_document
 runtime: shiny
 ---
 
+
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -58,8 +60,10 @@ AND d.cte_ind = 'Y';       --had gotten a CTE award
 
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, include=FALSE}
+# https://higheredutah.org/data/utah-wage-information/ similar information but not as grainular as this app. 
 library(shiny)
 library(tidyverse); theme_set(theme_minimal())
+
 data <- read_csv("cte_test.csv")
 
 data$wage_year <- substr(data$YEAR_QUARTER, 1,4)
@@ -499,14 +503,14 @@ data$wage4<- as.numeric(
 ```
 
 
-## Program
+## SLCC CTE workforce outcomes
 
 Start by selecting one college then select one or more programs to evaluate and compare by award level. All wage data is meant to represent starting wages for a student (12-24 months after their award). The wage distribution plot illustrates the spread of wages obtained from DWS by program. The Award Time Series plot displays the awards per academic year by program. The Wage Time Series plot displays the starting wages of various graduating cohorts through time by program. The Awards table provides summarized numbers for the data used to make the plots by Award year and program. 
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
+```{r set-options, echo=FALSE, warning=FALSE, message=FALSE}
+
 # Define UI for application
 ui <- fluidPage(
-  titlePanel("SLCC CTE workforce outcomes"),
   
   sidebarLayout(
     sidebarPanel(
@@ -562,8 +566,7 @@ server <- function(input, output) {
            title = "12-24 Month Earnings", 
            color = "Program") + 
       xlim(0, 100000) + 
-    facet_wrap(~DEGREE_CODE)},
-    height = 300, width = 600
+    facet_wrap(~DEGREE_CODE)}
     )
   
   # need to select unique awards, don't double count becasue of wage data.
@@ -578,8 +581,7 @@ server <- function(input, output) {
       ggtitle("Number of Awards by program") +
       xlab("Year (calendar)") + 
       ylab("Number of Awards") + 
-      scale_color_discrete(name="Program")},
-    height = 300, width = 600
+      scale_color_discrete(name="Program")}
     )
   
   output$wage_ts <- renderPlot({
@@ -599,8 +601,7 @@ server <- function(input, output) {
       labs(x = "Wages for award year", 
            y = "12-24 month post-award wages", 
            title = "Median wages by year", 
-           size = "Number of records")},
-    height = 300, width = 600
+           size = "Number of records")}
     )
   
     output$table <- renderTable({
@@ -619,9 +620,10 @@ server <- function(input, output) {
               ) %>%
         rename("Program name" = PROGRAM_NAME, "Award year" = aw_year)
       })
+    
 }
 # Run the application 
-shinyApp(ui = ui, server = server)
+shinyApp(ui = ui, server = server, options = list(height = 750))
 ```
 
 ## Data and Methodology notes
@@ -629,9 +631,3 @@ shinyApp(ui = ui, server = server)
 The data in this project are collected from Banner and the State of Utah's Department of Workforce Services (DWS). The DWS data is requested and updated regularly every semester. The DWS data is derived from State mandated employer surveys. The DWS data should provide accurate and wide coverage of SLCC graduates working in the State of Utah for private businesses. It will however not provide information on students who are self-employed, entrepreneurs, working for a religious or non-profit organizations, some federal government employees (military for example) and provides no information on the actual job the student has or periods of unemployment. Former students choosing to work seasonally or part time are not flagged in this data since work hours are not provided along with quarterly wages by employers to DWS.
 
 The students in this project have no history of transfer to another institution following their SLCC award. This data is meant to represent those students who complete a CTE award and immediately go into the workforce and not those who go on to complete more schooling or do not go into the workforce at all. 
-
-
-
-<!-- and no continued degree seeking SLCC activity. -->
-
-
